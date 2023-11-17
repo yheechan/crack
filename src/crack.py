@@ -9,11 +9,11 @@ class Solution:
     # weights: list -> list of each item's weight
     # profits: list -> list of each item's profit
     # len(weights) and len(pofits) MUST EQuAL to N
-    def __init__(self, N, weights, profits):
+    def __init__(self, N, weights, profits, fitness=0):
         self.N = N
         self.weights = weights
         self.profits = profits
-        self.fitness = 0
+        self.fitness = fitness
     
     def evaluate(self):
         self.fitness = fitness(self.N, self.items)
@@ -47,23 +47,101 @@ def random_solution():
 # output: fitness value
 def fitness(solution: Solution):
     # TODO: Sumin
-    True
+    return 0
 
 def select(k, population):
-    True
+    # we randomly sample k solutions from the population
+    participants = random.sample(population, k)
+    fitness_values = [fitness(p) for p in participants]
+    result =  sorted(participants, key=lambda x:x.fitness, reverse=False)[0]
+    return result
 
-def crossover(rate: float, s1: Solution, s2: Solution):
-    # TODO: Heechan
-    True
+def unzip(d):
+    weights = [i for i, j in d]
+    profits = [j for i, j in d]
 
-def mutate(rate: float, s: Solution):
+    return weights, profits
+
+def crossover(p1: Solution, p2: Solution, rate=0.7):
     # TODO: Heechan
-    True
+
+    if random.random() < rate:
+        # zip (weights, profits) as a pair
+        t1 = list(zip(p1.weights, p1.profits))
+        t2 = list(zip(p2.weights, p2.profits))
+
+        # randomly select a cross over point to split
+        cp1 = random.randint(0, p1.N-1)
+        cp2 = random.randint(0, p2.N-1)
+
+        # do crossover
+        c1 = t1[:cp1] + t2[cp2:]
+        c2 = t2[:cp2] + t1[cp1:]
+
+        # unzip cross overed pair
+        c1_weights, c1_profits = unzip(c1)
+        c2_weights, c2_profits = unzip(c2)
+
+        # make an offspring
+        o1 = cp_sol(p1)
+        o2 = cp_sol(p2)
+
+        # assign cross over weight and profit to offspring
+        o1.weights = c1_weights
+        o1.profits = c1_profits
+        o2.weights = c2_weights
+        o2.profits = c2_profits
+
+        # update N for the offspring to new cross over weight and profit
+        o1.N = len(o1.weights)
+        o2.N = len(o2.weights)
+
+        # evaluate offspring for new fitness score
+        o1.evaluate()
+        o2.evaluate()
+
+        return o1, o2
+    
+    return p1, p2
+
+def cp_sol(s):
+    return Solution(s.N, s.weights.copy(), s.profits.copy(), s.fitness)
+
+def mutate(s: Solution, rate=0.7):
+    m = cp_sol(s)
+
+    # Iterate over each element, weights, profits
+    for i in range(m.N):
+        if random.random() < rate:
+            # Apply a small random change to the gene
+            m.weights[i] += random.choice([-1, 1])
+            m.profits[i] += random.choice([-1, 1])
+    
+    m.evaluate
+
+    return m
 
 def ga():
     True
 
 
 if __name__ == "__main__":
-    sol = random_solution()
-    print(sol)
+    s1 = random_solution()
+    s2 = random_solution()
+
+    print("---initial")
+    print(s1)
+    print(s2)
+
+    c1, c2 = crossover(s1, s2, rate=1.0)
+
+    print("---after crossover")
+    print(c1)
+    print(c2)
+
+    m1 = mutate(c1, rate=1.0)
+    m2 = mutate(c2, rate=1.0)
+    
+    print("---after mutation")
+    print(m1)
+    print(m2)
