@@ -7,15 +7,16 @@ WEIGHT_MAX = 100000
 VALUES_MAX = 10000
 
 class Solution:
-    # N: int -> number of item choices
+    # N: int -> number of items
+    # budget: int -> budget
     # weights: list -> list of each item's weight
     # values: list -> list of each item's profit
     # len(weights) and len(pofits) MUST EQuAL to N
-    def __init__(self, N, B, weights, value, fitness=0):
+    def __init__(self, N, budget, weights, values, fitness=0):
         self.N = N
-        self.B = B
+        self.budget = budget
         self.weights = weights
-        self.values = value
+        self.values = values
         self.fitness = fitness
     
     def evaluate(self):
@@ -24,7 +25,7 @@ class Solution:
     def __str__(self):
         out_str = "====== SOLUTION ======\n"
         out_str += "N: {}\n".format(self.N)
-        out_str += "B: {}\n".format(self.B)
+        out_str += "budget: {}\n".format(self.budget)
         out_str += "weights ({}): {}\n".format(len(self.weights), self.weights)
         out_str += "values ({}): {}\n".format(len(self.values), self.values)
         out_str += "fitness: {}\n".format(self.fitness)
@@ -36,11 +37,11 @@ class Solution:
 # output: Solution (N, weights, values)
 def random_solution():
     N = random.randint(1, N_MAX)
-    B = random.randint(1, B_MAX)
+    budget = random.randint(1, B_MAX)
     weights = [random.randint(1, WEIGHT_MAX) for i in range(N)]
     values = [random.randint(1, VALUES_MAX) for i in range(N)]
     
-    sol = Solution(N, B, weights, values)
+    sol = Solution(N, budget, weights, values)
     
     return sol
     
@@ -48,7 +49,7 @@ def try_solution(solution):
     gt = "dp"
     code = f"""
 import {gt}
-{gt}.program({solution.N}, {solution.B}, {solution.V}, {solution.W})
+{gt}.program({solution.N}, {solution.budget}, {solution.weights}, {solution.values})
     """
     gt_sol = eval(code)
     sample_list = glob.glob("program_*.py")
@@ -57,7 +58,7 @@ import {gt}
     for sample in sample_list:
         code = f"""
 import {sample}
-{sample}.{sample}({solution.N}, {solution.B}, {solution.V}, {solution.W})
+{sample}.{sample}({solution.N}, {solution.budget}, {solution.weights}, {solution.values})
         """
         res_list.append(eval(code))
     return gt_sol, res_list
@@ -121,15 +122,15 @@ def crossover(p1: Solution, p2: Solution, rate=0.7):
         o2.N = len(o2.weights)
 
         # evaluate offspring for new fitness score
-        o1.evaluate()
-        o2.evaluate()
+        # o1.evaluate()
+        # o2.evaluate()
 
         return o1, o2
     
     return p1, p2
 
 def cp_sol(s):
-    return Solution(s.N, s.B, s.weights.copy(), s.values.copy(), s.fitness)
+    return Solution(s.N, s.budget, s.weights.copy(), s.values.copy(), s.fitness)
 
 def mutate(s: Solution, rate=0.7):
     m = cp_sol(s)
@@ -141,7 +142,7 @@ def mutate(s: Solution, rate=0.7):
             m.weights[i] += random.choice([-1, 1])
             m.values[i] += random.choice([-1, 1])
     
-    m.evaluate
+    # m.evaluate
 
     return m
 
