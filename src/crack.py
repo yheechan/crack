@@ -1,4 +1,5 @@
 import random
+import glob
 
 BUDGET_FIXED = 150
 N_RANGE = 30
@@ -42,12 +43,42 @@ def random_solution():
     sol = Solution(N, weights, profits)
     
     return sol
+    
+def try_solution(solution):
+    gt = "dp"
+    code = f"""
+import {gt}
+{gt}.foo({solution.N}, {solution.weights}, {solution.profits})
+    """
+    gt_sol = eval(code)
+    sample_list = glob.glob("sample_*.py")
+    sample_list = [s[:-len(".py")] for s in sample_list]
+    res_list = []
+    for sample in sample_list:
+        code = f"""
+import {sample}
+{sample}.foo({solution.weights}, {solution.profits})
+        """
+        res_list.append(eval(code))
+    return gt_sol, res_list
+
+
 
 # input: solution
 # output: fitness value
 def fitness(solution: Solution):
     # TODO: Sumin
-    True
+    gt_sol, res_list = try_solution(solution)
+    # wrong distance -> how to penalize?
+    # 1. dp의 결과보다 작은 값이 나오는 것보다 dp보다 큰 값이 나오는 게 훨씬 잘못된 것인가?
+    #    그냥 절댓값인건지 궁금합니다.
+    # 2. 값의 차이가 클수록 edge case인가?
+    #    틀린 값을 내놓는데, 결과가 1 차이가 난다고 해서 아쉽거나 그런 건 아닌 것 같습니다.
+    wrong_distance = [(gt_sol - r) for r in res_list]
+    wrong_count = sum([1 if gt_sol != r else 0 for r in res_list])
+    a = 1
+    b = 1
+    return a * wrong_count + b * wrong_distance
 
 def select(k, population):
     True
