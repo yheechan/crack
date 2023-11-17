@@ -1,17 +1,19 @@
 import random
 import glob
 
-BUDGET_FIXED = 150
-N_RANGE = 30
-WEIGHT_RANGE = 20
+N_MAX = 100
+B_MAX = 100000
+WEIGHT_MAX = 100000
+VALUES_MAX = 10000
 
 class Solution:
     # N: int -> number of item choices
     # weights: list -> list of each item's weight
     # values: list -> list of each item's profit
     # len(weights) and len(pofits) MUST EQuAL to N
-    def __init__(self, N, weights, value, fitness=0):
+    def __init__(self, N, B, weights, value, fitness=0):
         self.N = N
+        self.B = B
         self.weights = weights
         self.values = value
         self.fitness = fitness
@@ -22,6 +24,7 @@ class Solution:
     def __str__(self):
         out_str = "====== SOLUTION ======\n"
         out_str += "N: {}\n".format(self.N)
+        out_str += "B: {}\n".format(self.B)
         out_str += "weights ({}): {}\n".format(len(self.weights), self.weights)
         out_str += "values ({}): {}\n".format(len(self.values), self.values)
         out_str += "fitness: {}\n".format(self.fitness)
@@ -32,15 +35,12 @@ class Solution:
 # generates one random solution
 # output: Solution (N, weights, values)
 def random_solution():
-    N = random.randint(1, N_RANGE)
-    weights = [random.randint(1, WEIGHT_RANGE) for i in range(N)]
-
-    values = []
-    x = [random.random() for i in range(N)]
-    for i in range(N):
-        values.append(int(weights[i]*(x[i]*3+0.5)))
+    N = random.randint(1, N_MAX)
+    B = random.randint(1, B_MAX)
+    weights = [random.randint(1, WEIGHT_MAX) for i in range(N)]
+    values = [random.randint(1, VALUES_MAX) for i in range(N)]
     
-    sol = Solution(N, weights, values)
+    sol = Solution(N, B, weights, values)
     
     return sol
     
@@ -129,7 +129,7 @@ def crossover(p1: Solution, p2: Solution, rate=0.7):
     return p1, p2
 
 def cp_sol(s):
-    return Solution(s.N, s.weights.copy(), s.values.copy(), s.fitness)
+    return Solution(s.N, s.B, s.weights.copy(), s.values.copy(), s.fitness)
 
 def mutate(s: Solution, rate=0.7):
     m = cp_sol(s)
