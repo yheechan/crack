@@ -1,10 +1,19 @@
 import random
-import glob
+import os
 
 N_MAX = 100
 B_MAX = 100000
 WEIGHT_MAX = 100000
 VALUES_MAX = 10000
+
+def dp(N: int, B: int, W: list, V: list) -> int:
+    if N == 0 or B == 0:
+        return 0
+    if (W[N-1] > B):
+        return dp(N-1, B, W, V)
+    else:
+        return max(V[N-1] + dp(N-1,B-W[N-1], W, V), dp(N-1, B, W, V))
+    
 
 class Solution:
     # N: int -> number of items
@@ -46,28 +55,25 @@ def random_solution():
     return sol
     
 def try_solution(solution):
-    gt = "dp"
-    code = f"""
-import {gt}
-{gt}.program({solution.N}, {solution.budget}, {solution.weights}, {solution.values})
-    """
-    gt_sol = eval(code)
-    sample_list = glob.glob("program_*.py")
-    sample_list = [s[:-len(".py")] for s in sample_list]
+    gt = dp(solution.N, solution.budget, solution.weights, solution.values)
+    # print(os.listdir("./"))
+    sample_list = os.listdir("./data/")
+    sample_list = [s for s in sample_list if s.endswith(".py")]
+    sample_list = [s.split("/")[-1][:-len(".py")] for s in sample_list]
     res_list = []
     for sample in sample_list:
-        code = f"""
-import {sample}
-{sample}.{sample}({solution.N}, {solution.budget}, {solution.weights}, {solution.values})
-        """
+        exec(f'import data.{sample} as {sample}')
+        code = f"{sample}.{sample}({solution.N}, {solution.budget}, {solution.weights}, {solution.values})"
         res_list.append(eval(code))
-    return gt_sol, res_list
+    return gt, res_list
 
 # input: solution
 # output: fitness value
 def fitness(solution: Solution):
     # TODO: Sumin
     gt_sol, res_list = try_solution(solution)
+    print("gt: ", gt_sol)
+    print("res: ", res_list)
     # wrong_distance = sum([(gt_sol - r) for r in res_list])
     wrong_count = sum([1 if gt_sol != r else 0 for r in res_list])
     # a = 1
