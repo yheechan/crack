@@ -15,12 +15,6 @@ def select(k, population):
     result =  sorted(participants, key=lambda x:x.fitness, reverse=True)[0]
     return result
 
-
-N_MAX = 100
-B_MAX = 100000
-WEIGHT_MAX = 100000
-VALUE_MAX = 10000
-
 def ga(
     experiment_name='test_no_name',
     pop_size=40,
