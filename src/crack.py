@@ -4,7 +4,7 @@ import os
 N_MAX = 100
 B_MAX = 100000
 WEIGHT_MAX = 100000
-VALUES_MAX = 10000
+VALUE_MAX = 10000
 
 def dp(N: int, B: int, W: list, V: list) -> int:
     if N == 0 or B == 0:
@@ -48,7 +48,7 @@ def random_solution():
     N = random.randint(1, N_MAX)
     budget = random.randint(1, B_MAX)
     weights = [random.randint(1, WEIGHT_MAX) for i in range(N)]
-    values = [random.randint(1, VALUES_MAX) for i in range(N)]
+    values = [random.randint(1, VALUE_MAX) for i in range(N)]
     
     sol = Solution(N, budget, weights, values)
     
@@ -93,11 +93,20 @@ def unzip(d):
 
     return weights, values
 
-def crossover(p1: Solution, p2: Solution, rate=0.7):
+def remove_items(items: list):
+    amount = len(items) - N_MAX
+    rm_items = random.sample(items, amount)
+
+    for item in rm_items:
+        items.remove(item)
+    
+    return items
+
+def crossover(p1: Solution, p2: Solution, cross_rate=0.7, at_invalid_rate=0.5):
     # TODO: Heechan
 
-    if random.random() < rate:
-        # zip (weights, values) as a pair
+    if random.random() < cross_rate:
+        # zip (weights, values) as a pair -> list of tubles [(w, v) ...]
         t1 = list(zip(p1.weights, p1.values))
         t2 = list(zip(p2.weights, p2.values))
 
@@ -108,6 +117,22 @@ def crossover(p1: Solution, p2: Solution, rate=0.7):
         # do crossover
         c1 = t1[:cp1] + t2[cp2:]
         c2 = t2[:cp2] + t1[cp1:]
+
+        # if number of items exceeds N_MAX
+        # remove items to satisfy N_MAX
+        if len(c1) > N_MAX:
+            if random.random() < at_invalid_rate:
+                c1 = remove_items(c1)
+            else:
+                c1 = random.sample(c1, N_MAX)
+        if len(c2) > N_MAX:
+            if random.random() < at_invalid_rate:
+                c2 = remove_items(c2)
+            else:
+                c2 = random.sample(c2, N_MAX)
+
+        assert(len(c1) <= N_MAX and len(c2) >= 0)
+        assert(len(c2) <= N_MAX and len(c2) >= 0)
 
         # unzip cross overed pair
         c1_weights, c1_values = unzip(c1)
@@ -138,17 +163,61 @@ def crossover(p1: Solution, p2: Solution, rate=0.7):
 def cp_sol(s):
     return Solution(s.N, s.budget, s.weights.copy(), s.values.copy(), s.fitness)
 
-def mutate(s: Solution, rate=0.7):
+def restrict_val(val: int, dir: bool):
+    if dir:
+        return val - 1
+    else:
+        return val + 1
+
+
+def mutate(s: Solution, mutate_rate=0.7, mutate_type_rate=0.5, at_invalid_rate=0.5):
     m = cp_sol(s)
+
+    # mutate budget
+    if random.random() < mutate_rate:
+        if random.random() < mutate_type_rate:
+            m.budget += random.choice([-1, 1])
+
+            # when mutated budget exceeeds B_MAX
+            if m.budget > B_MAX or m.budget < 0:
+                if random.random() < at_invalid_rate:
+                    m.budget = restrict_val(m.budget, (m.budget > B_MAX))
+                else:
+                    m.budget = random.randint(0, B_MAX)
+        else:
+            m.budget = random.randint(0, B_MAX)
+
+    assert(m.budget <= B_MAX and m.budget >= 0)
+        
 
     # Iterate over each element, weights, values
     for i in range(m.N):
-        if random.random() < rate:
+        if random.random() < mutate_rate:
             # Apply a small random change to the gene
-            m.weights[i] += random.choice([-1, 1])
-            m.values[i] += random.choice([-1, 1])
+            # if value exceeds WEIGHT_MAX, VALUE_MAX
+            # mutate value to satisfy them
+            if random.random() < mutate_type_rate:
+                m.weights[i] += random.choice([-1, 1])
+                if m.weights[i] > WEIGHT_MAX or m.weights[i] < 0:
+                    if random.random() < at_invalid_rate:
+                        m.weights[i] = restrict_val(m.weights[i], (m.weights[i] > WEIGHT_MAX))
+                    else:
+                        m.weights[i] = random.randint(0, WEIGHT_MAX)
+
+                m.values[i] += random.choice([-1, 1])
+                if m.values[i] > VALUE_MAX or m.values[i] < 0:
+                    if random.random() < at_invalid_rate:
+                        m.values[i] = restrict_val(m.values[i], (m.values[i] > VALUE_MAX))
+                    else:
+                        m.values[i] = random.randint(0, VALUE_MAX)
+            else:
+                m.weights[i] = random.randint(0, WEIGHT_MAX)
+                m.values[i] = random.randint(0, VALUE_MAX)
+
+        assert(m.weights[i] <= WEIGHT_MAX and m.weights[i] >= 0)
+        assert(m.values[i] <= VALUE_MAX and m.values[i] >= 0)
     
-    # m.evaluate
+    # m.evaluate()
 
     return m
 
@@ -160,19 +229,21 @@ if __name__ == "__main__":
     s1 = random_solution()
     s2 = random_solution()
 
-    print("---initial")
+    print("*** initial ***")
     print(s1)
     print(s2)
 
-    c1, c2 = crossover(s1, s2, rate=1.0)
+    for i in range(100000000000):
+        print("*** TEST {} ***".format(i))
+        s1, s2 = crossover(s1, s2, cross_rate=1.0, at_invalid_rate=0.5)
 
-    print("---after crossover")
-    print(c1)
-    print(c2)
+        print("*** {}: after crossover ***".format(i))
+        print(s1)
+        print(s2)
 
-    m1 = mutate(c1, rate=1.0)
-    m2 = mutate(c2, rate=1.0)
-    
-    print("---after mutation")
-    print(m1)
-    print(m2)
+        s1 = mutate(s1, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
+        s2 = mutate(s2, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
+
+        print("*** {}: after mutation ***".format(i))
+        print(s1)
+        print(s2)
