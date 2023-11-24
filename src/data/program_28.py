@@ -1,4 +1,4 @@
-def program_35(N,K,W,V):
+def program_28(N,K,W,V):
   a = N
   b = K
   dic = {}
