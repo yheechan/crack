@@ -18,6 +18,8 @@ def program_8(N: int, B: int, W: list, V: list) -> int:
                 dq_temp.append((j + weights[i - 1], dp[j] + values[i - 1]))
 
         for weight, val in dq_temp:
+            if K < weight: continue
+
             dp[weight] = max(dp[weight], val)
 
             if dp[weight] > answer:
