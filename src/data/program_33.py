@@ -1,4 +1,4 @@
-def program_33(N,K,V,W):
+def program_33(N,K,W,V):
   n = N
   k = K
 

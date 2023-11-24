@@ -1,4 +1,4 @@
-def program_30(N,K,value,weight):
+def program_30(N,K,weight,value):
   best_VALUE_by_K = [0] * (K+1)
   for i in range(N):
     W = weight[i]

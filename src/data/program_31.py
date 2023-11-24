@@ -1,6 +1,6 @@
 import numpy as np
 
-def program_31(N,K,V,W):
+def program_31(N,K,W,V):
   n = N
   k = K
   tlist = []

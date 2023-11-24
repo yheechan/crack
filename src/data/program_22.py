@@ -1,4 +1,4 @@
-def program_22(N,K,V,W):
+def program_22(N,K,W,V):
     n = N
     capacity = K
     weights = W

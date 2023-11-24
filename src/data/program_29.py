@@ -1,6 +1,6 @@
 import numpy as np
 
-def program_29(N,K,V,W):
+def program_29(N,K,W,V):
     cases = N
     bag = K
     items = list(zip(W,V))

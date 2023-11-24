@@ -1,4 +1,4 @@
-def program_34(N,K,V,W):
+def program_34(N,K,W,V):
   n = N
   m = K
   d = [] # 들어갈 수 있는 물건 목록

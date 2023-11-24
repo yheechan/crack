@@ -1,4 +1,4 @@
-def program_21(N,K,V,W):
+def program_21(N,K,W,V):
   item_list = [[W[i],V[i]] for i in range(N)]
   item_list.sort()
 

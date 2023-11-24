@@ -1,6 +1,6 @@
 import heapq
 
-def program_27(N,K,V,W):
+def program_27(N,K,W,V):
     heap_list =[]
     result =[]
 

@@ -1,4 +1,4 @@
-def program_32(N,K,V,W):
+def program_32(N,K,W,V):
   n = N
   k = K
   dp = [[0 for _ in range(k+1)] for _ in range(n)]

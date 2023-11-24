@@ -3,7 +3,7 @@
 # 1 100000
 # 1 2
 
-def program_26(N,K,V,W):
+def program_26(N,K,W,V):
 
   things = zip(W,V)
   things = sorted(things, key=lambda x: x[0])

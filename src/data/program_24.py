@@ -1,4 +1,4 @@
-def program_24(N,K,V,W):
+def program_24(N,K,W,V):
   def knapsack(items, limit):
       items = sorted(items, key=lambda x: x[0])                    # pre-sort
       profit = [[[0, 0], [0, 0]] for _ in range(len(items)+1)]     # length of items + 1 for the better readability

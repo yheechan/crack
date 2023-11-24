@@ -1,4 +1,4 @@
-def program_23(N,K,V,W):
+def program_23(N,K,W,V):
   n = N
   m = K
   things = [[W[i],V[i]]for i in range(n)]
