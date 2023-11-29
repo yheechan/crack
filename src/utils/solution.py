@@ -17,17 +17,21 @@ class Solution:
         self.weights = weights
         self.values = values
         self.fitness = fitness
+        self.ratio = 0.0
     
     def evaluate(self):
         self.fitness = fitness(self)
+        self.ratio = sum(self.fitness) / len(self.fitness)
+
     
     def __str__(self):
         out_str = "====== SOLUTION ======\n"
         out_str += "N: {}\n".format(self.N)
         out_str += "budget: {}\n".format(self.budget)
-        out_str += "\nweights ({}): {}\n".format(len(self.weights), self.weights)
-        out_str += "\nvalues ({}): {}\n".format(len(self.values), self.values)
-        out_str += "\nfitness: {}\n".format(self.fitness)
+        out_str += "weights ({}): {}\n".format(len(self.weights), self.weights)
+        out_str += "values ({}): {}\n".format(len(self.values), self.values)
+        out_str += "fitness: {}\n".format(self.fitness)
+        out_str += "ratio: {}\n".format(self.ratio)
         out_str += "======================\n"
 
         return out_str
@@ -40,11 +44,16 @@ class Solution:
 # generates one random solution
 # output: Solution (N, weights, values)
 def random_solution(n_max, b_max, weight_max, value_max):
+    # print(">> random solution: N")
     N = random.randint(1, n_max)
+    # print(">> random solution: budget")
     budget = random.randint(1, b_max)
+    # print(">> random solution: weights")
     weights = [random.randint(1, weight_max) for i in range(N)]
+    # print(">> random solution: values")
     values = [random.randint(1, value_max) for i in range(N)]
     
+    # print(">> random solution: Solution")
     sol = Solution(N, budget, weights, values)
     
     return sol
@@ -77,6 +86,8 @@ def try_solution(solution):
 
     res_list = []
     for sample in sample_list:
+        # print(">> evaluation: trying sample: {}".format(sample))
+
         exec(f'import data.{sample} as {sample}')
         code = f"{sample}.{sample}({solution.N}, {solution.budget}, {solution.weights}, {solution.values})"
 
