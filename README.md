@@ -49,6 +49,9 @@ $ python3 crack.py
     * implement script for making visualizations
     * receive all the experiments done by each member
     * finalize visualizations
+    * possible helpful sites
+        * reading json: https://www.geeksforgeeks.org/read-json-file-using-python/
+        * reading multiple json in one file: https://pynative.com/python-parse-multiple-json-objects-from-file/
 * jaemin & heechan:
     * continue elaboration and thinking with hyunsun and sumin for making our final presentation and report a better quality
 
