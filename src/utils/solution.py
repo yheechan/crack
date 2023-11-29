@@ -100,8 +100,8 @@ def fitness(solution):
     # print("res: ", res_list)
     # wrong_distance = sum([(gt_sol - r) for r in res_list])
 
-    wrong_count = sum([1 if gt_sol != r else 0 for r in res_list])
+    wrong_count = [True if gt_sol != r else False for r in res_list]
     # print("{} wrong out of {}".format(wrong_count, len(res_list)))
-    final_fitness = wrong_count / len(res_list)
+    # final_fitness = wrong_count / len(res_list)
 
-    return final_fitness
+    return wrong_count
