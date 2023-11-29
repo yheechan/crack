@@ -1,4 +1,6 @@
 import random
+import numpy as np
+import math
 from . import solution as sl
 
 def unzip(d):
@@ -24,7 +26,28 @@ def restrict_val(val: int, dir: bool):
         return val - 1
     else:
         return val + 1
+    
+def discrete_normal_distribution(N):
+    # Create a discrete distribution with a normal-like shape
+    values = np.arange(N + 1)
+    probabilities = np.exp(-(values - N/2)**2 / (2 * (N/4)**2))
+    probabilities /= probabilities.sum()
 
+    # Sample from the discrete distribution
+    sampled_value = np.random.choice(values, p=probabilities)
+
+    return sampled_value
+
+def budget_proportion(o1, o2, cp1, cp2):
+    N1 = o1.N
+    N2 = o2.N
+    B1 = o1.budget
+    B2 = o2.budget
+    
+    b1 = round(float(B1)*(cp1 + 1)/N1 + float(B2)*(N2 - (cp2 + 1))/N2)
+    b2 = round(float(B1)*(N1 - (cp1 + 1))/N1 + float(B2)*(cp2 + 1)/N2)
+    
+    return b1, b2
 
 # ****************************************************
 # ********** Regarding Crossover & Mutation **********
@@ -43,9 +66,13 @@ def crossover(
         t1 = list(zip(p1.weights, p1.values))
         t2 = list(zip(p2.weights, p2.values))
 
-        # randomly select a cross over point to split
-        cp1 = random.randint(0, p1.N-1)
-        cp2 = random.randint(0, p2.N-1)
+        # randomly select a cross over point to split in uniform distribution
+        #cp1 = random.randint(0, p1.N-1)
+        #cp2 = random.randint(0, p2.N-1)
+        
+        # randomly select a cross over point to split in discrete normal distribution
+        cp1 = discrete_normal_distribution(p1.N-1)
+        cp2 = discrete_normal_distribution(p2.N-1)
 
         # do crossover
         c1 = t1[:cp1] + t2[cp2:]
@@ -81,6 +108,9 @@ def crossover(
         o2.weights = c2_weights
         o2.values = c2_values
 
+        # update budget for the offspring in proportion to its N
+        o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2)
+
         # update N for the offspring to new cross over weight and profit
         o1.N = len(o1.weights)
         o2.N = len(o2.weights)
@@ -111,8 +141,7 @@ def mutate(
     if random.random() < mutate_rate:
         update = True
         if random.random() < mutate_type_rate:
-            m.budget += random.choice([-1, 1])
-
+            m.budget += random.choice([-1, 1, -3, 3, -5, 5, -10, 10]) 
             # when mutated budget exceeeds b_max
             if m.budget > b_max or m.budget < 0:
                 if random.random() < at_invalid_rate:
