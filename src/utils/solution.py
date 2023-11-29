@@ -80,7 +80,11 @@ def try_solution(solution):
         exec(f'import data.{sample} as {sample}')
         code = f"{sample}.{sample}({solution.N}, {solution.budget}, {solution.weights}, {solution.values})"
 
-        res = eval(code)
+        res = 0
+        try:
+            res = eval(code)
+        except:
+            res = -1
         # print("result on {}: {}".format(sample, res))
         res_list.append(res)
 
