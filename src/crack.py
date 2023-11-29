@@ -1,5 +1,6 @@
 import random
 import os
+import time
 
 N_MAX = 100
 B_MAX = 100000
@@ -72,8 +73,8 @@ def try_solution(solution):
 def fitness(solution: Solution):
     # TODO: Sumin
     gt_sol, res_list = try_solution(solution)
-    print("gt: ", gt_sol)
-    print("res: ", res_list)
+    # print("gt: ", gt_sol)
+    # print("res: ", res_list)
     # wrong_distance = sum([(gt_sol - r) for r in res_list])
     wrong_count = sum([1 if gt_sol != r else 0 for r in res_list])
     # a = 1
@@ -227,23 +228,26 @@ def ga():
 
 if __name__ == "__main__":
     s1 = random_solution()
-    s2 = random_solution()
+    start = time.time()
+    print(fitness(s1))
+    print("time: ", time.time()-start)
+    # s2 = random_solution()
 
-    print("*** initial ***")
-    print(s1)
-    print(s2)
+    # print("*** initial ***")
+    # print(s1)
+    # print(s2)
 
-    for i in range(100000000000):
-        print("*** TEST {} ***".format(i))
-        s1, s2 = crossover(s1, s2, cross_rate=1.0, at_invalid_rate=0.5)
+    # for i in range(100000000000):
+    #     print("*** TEST {} ***".format(i))
+    #     s1, s2 = crossover(s1, s2, cross_rate=1.0, at_invalid_rate=0.5)
 
-        print("*** {}: after crossover ***".format(i))
-        print(s1)
-        print(s2)
+    #     print("*** {}: after crossover ***".format(i))
+    #     print(s1)
+    #     print(s2)
 
-        s1 = mutate(s1, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
-        s2 = mutate(s2, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
+    #     s1 = mutate(s1, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
+    #     s2 = mutate(s2, mutate_rate=1.0, mutate_type_rate=0.5, at_invalid_rate=0.5)
 
-        print("*** {}: after mutation ***".format(i))
-        print(s1)
-        print(s2)
+    #     print("*** {}: after mutation ***".format(i))
+    #     print(s1)
+    #     print(s2)
