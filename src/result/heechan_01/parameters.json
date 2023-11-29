@@ -1,0 +1,16 @@
+{
+    "experiment_name": "heechan_01",
+    "end_criterion": 0.9,
+    "tc_size": 3,
+    "gen_limit": 4,
+    "selection": 2,
+    "cross_rate": 1.0,
+    "cross_at_invalid_rate": 0.0,
+    "mutate_rate": 1.0,
+    "mutate_type_rate": 0.2,
+    "mutate_at_invalid_rate": 0.5,
+    "n_max": 10,
+    "b_max": 10000,
+    "weight_max": 10000,
+    "value_max": 1000
+}
