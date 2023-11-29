@@ -62,6 +62,7 @@ def crossover(
     # TODO: Heechan
 
     if random.random() < cross_rate:
+        # print(">> crossver: zipped")
         # zip (weights, values) as a pair -> list of tubles [(w, v) ...]
         t1 = list(zip(p1.weights, p1.values))
         t2 = list(zip(p2.weights, p2.values))
@@ -70,14 +71,17 @@ def crossover(
         #cp1 = random.randint(0, p1.N-1)
         #cp2 = random.randint(0, p2.N-1)
         
+        # print(">> crossver: select cross point")
         # randomly select a cross over point to split in discrete normal distribution
         cp1 = discrete_normal_distribution(p1.N-1)
         cp2 = discrete_normal_distribution(p2.N-1)
 
+        # print(">> crossver: do crossover")
         # do crossover
         c1 = t1[:cp1] + t2[cp2:]
         c2 = t2[:cp2] + t1[cp1:]
 
+        # print(">> crossover: assertion for valid input")
         # if number of items exceeds N_MAX
         # remove items to satisfy N_MAX
         if len(c1) > n_max:
@@ -94,32 +98,41 @@ def crossover(
         assert(len(c1) <= n_max and len(c2) >= 0)
         assert(len(c2) <= n_max and len(c2) >= 0)
 
+        # print(">> crossover: unzip")
         # unzip cross overed pair
         c1_weights, c1_values = unzip(c1)
         c2_weights, c2_values = unzip(c2)
 
+        # print(">> crossover: copy for new offspring")
         # make an offspring
         o1 = cp_sol(p1)
         o2 = cp_sol(p2)
 
+        # print(">> crossover: update new weights & values")
         # assign cross over weight and profit to offspring
         o1.weights = c1_weights
         o1.values = c1_values
         o2.weights = c2_weights
         o2.values = c2_values
 
+        # print(">> crossover: update budget as porportion")
         # update budget for the offspring in proportion to its N
         o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2)
 
+        # print(">> crossover: update length")
         # update N for the offspring to new cross over weight and profit
         o1.N = len(o1.weights)
         o2.N = len(o2.weights)
 
         # evaluate offspring for new fitness score
+        # print(">> crossover: evaluating o1")
         o1.evaluate()
+        # print(">> crossover: evaluating o2")
         o2.evaluate()
 
         return o1, o2
+    
+    # print(">> crossover: done")
     
     return p1, p2
 
@@ -137,11 +150,12 @@ def mutate(
     m = cp_sol(s)
     update = False
 
+    # print(">> mutate: mutate budget")
     # mutate budget
     if random.random() < mutate_rate:
         update = True
         if random.random() < mutate_type_rate:
-            m.budget += random.choice([-1, 1, -3, 3, -5, 5, -10, 10]) 
+            m.budget += random.choice([-1, 1]) 
             # when mutated budget exceeeds b_max
             if m.budget > b_max or m.budget < 0:
                 if random.random() < at_invalid_rate:
@@ -155,6 +169,7 @@ def mutate(
         
 
     # Iterate over each element, weights, values
+    # print(">> mutate: mutate elements")
     for i in range(m.N):
         if random.random() < mutate_rate:
             update = True
@@ -182,6 +197,7 @@ def mutate(
         assert(m.weights[i] <= weight_max and m.weights[i] >= 0)
         assert(m.values[i] <= value_max and m.values[i] >= 0)
     
+    # print(">> mutate: evaluate mutated individual")
     if update:
         m.evaluate()
 

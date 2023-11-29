@@ -1,0 +1,28 @@
+====== Test-Suite Info ======
+tc_num: 3
+data_num: 23
+state (23): [True, True, True, True, False, True, False, False, False, True, True, False, True, True, False, False, False, True, False, True, True, True, False]
+fitness: 0.5652173913043478
+=============================
+
+====== Test-Suite Info ======
+tc_num: 3
+data_num: 23
+state (23): [True, True, True, True, False, True, False, False, False, True, True, False, True, True, False, True, False, True, False, True, True, True, False]
+fitness: 0.6086956521739131
+=============================
+
+====== Test-Suite Info ======
+tc_num: 3
+data_num: 23
+state (23): [True, True, True, True, False, True, False, True, True, True, True, False, True, True, False, True, False, True, False, True, True, True, False]
+fitness: 0.6956521739130435
+=============================
+
+====== Test-Suite Info ======
+tc_num: 3
+data_num: 23
+state (23): [True, True, True, True, False, True, False, True, True, True, True, False, True, True, False, True, False, True, False, True, True, True, False]
+fitness: 0.6956521739130435
+=============================
+
