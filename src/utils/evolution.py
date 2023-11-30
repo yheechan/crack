@@ -3,6 +3,8 @@ import numpy as np
 import math
 from . import solution as sl
 
+B_MAX = 10000
+
 def unzip(d):
     weights = [i for i, j in d]
     values = [j for i, j in d]
@@ -30,7 +32,7 @@ def restrict_val(val: int, dir: bool):
 def discrete_normal_distribution(N):
     # Create a discrete distribution with a normal-like shape
     values = np.arange(N + 1)
-    probabilities = np.exp(-(values - N/2)**2 / (2 * (N/4)**2))
+    probabilities = np.exp(-(values - N/2.0)**2 / (2 * (N/4.0)**2))
     probabilities /= probabilities.sum()
 
     # Sample from the discrete distribution
@@ -44,8 +46,11 @@ def budget_proportion(o1, o2, cp1, cp2):
     B1 = o1.budget
     B2 = o2.budget
     
-    b1 = round(float(B1)*(cp1 + 1)/N1 + float(B2)*(N2 - (cp2 + 1))/N2)
-    b2 = round(float(B1)*(N1 - (cp1 + 1))/N1 + float(B2)*(cp2 + 1)/N2)
+    b1 = math.floor(float(B1)*(cp1 + 1)/N1 + float(B2)*(N2 - (cp2 + 1))/N2)
+    b2 = math.floor(float(B1)*(N1 - (cp1 + 1))/N1 + float(B2)*(cp2 + 1)/N2)
+    
+    b1 = min(B_MAX, b1)
+    b2 = min(B_MAX, b2)
     
     return b1, b2
 
@@ -58,6 +63,7 @@ def crossover(
         cross_rate=0.7,
         at_invalid_rate=0.0,
         n_max=100,
+        method = 1
 ):
     # TODO: Heechan
 
@@ -67,14 +73,16 @@ def crossover(
         t1 = list(zip(p1.weights, p1.values))
         t2 = list(zip(p2.weights, p2.values))
 
-        # randomly select a cross over point to split in uniform distribution
-        #cp1 = random.randint(0, p1.N-1)
-        #cp2 = random.randint(0, p2.N-1)
-        
+        cp1, cp2 = 0, 0
+        if method == 1 or method == 2:
+            # randomly select a cross over point to split in uniform distribution
+            cp1 = random.randint(0, p1.N-1)
+            cp2 = random.randint(0, p2.N-1)
         # print(">> crossver: select cross point")
-        # randomly select a cross over point to split in discrete normal distribution
-        cp1 = discrete_normal_distribution(p1.N-1)
-        cp2 = discrete_normal_distribution(p2.N-1)
+        else :
+            # randomly select a cross over point to split in discrete normal distribution
+            cp1 = discrete_normal_distribution(p1.N-1)
+            cp2 = discrete_normal_distribution(p2.N-1)
 
         # print(">> crossver: do crossover")
         # do crossover
@@ -95,8 +103,8 @@ def crossover(
             else:
                 c2 = random.sample(c2, n_max)
 
-        assert(len(c1) <= n_max and len(c2) >= 0)
-        assert(len(c2) <= n_max and len(c2) >= 0)
+        assert(len(c1) <= n_max and len(c1) >= 1)
+        assert(len(c2) <= n_max and len(c2) >= 1)
 
         # print(">> crossover: unzip")
         # unzip cross overed pair
@@ -116,8 +124,9 @@ def crossover(
         o2.values = c2_values
 
         # print(">> crossover: update budget as porportion")
-        # update budget for the offspring in proportion to its N
-        o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2)
+        if method == 2 or method == 4:
+            # update budget for the offspring in proportion to its N
+            o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2)
 
         # print(">> crossover: update length")
         # update N for the offspring to new cross over weight and profit
