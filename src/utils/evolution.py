@@ -157,15 +157,15 @@ def mutate(
         if random.random() < mutate_type_rate:
             m.budget += random.choice([-1, 1]) 
             # when mutated budget exceeeds b_max
-            if m.budget > b_max or m.budget < 0:
+            if m.budget > b_max or m.budget < 1:
                 if random.random() < at_invalid_rate:
                     m.budget = restrict_val(m.budget, (m.budget > b_max))
                 else:
-                    m.budget = random.randint(0, b_max)
+                    m.budget = random.randint(1, b_max)
         else:
-            m.budget = random.randint(0, b_max)
+            m.budget = random.randint(1, b_max)
 
-    assert(m.budget <= b_max and m.budget >= 0)
+    assert(m.budget <= b_max and m.budget >= 1)
         
 
     # Iterate over each element, weights, values
@@ -178,24 +178,24 @@ def mutate(
             # mutate value to satisfy them
             if random.random() < mutate_type_rate:
                 m.weights[i] += random.choice([-1, 1])
-                if m.weights[i] > weight_max or m.weights[i] < 0:
+                if m.weights[i] > weight_max or m.weights[i] < 1:
                     if random.random() < at_invalid_rate:
                         m.weights[i] = restrict_val(m.weights[i], (m.weights[i] > weight_max))
                     else:
-                        m.weights[i] = random.randint(0, weight_max)
+                        m.weights[i] = random.randint(1, weight_max)
 
                 m.values[i] += random.choice([-1, 1])
-                if m.values[i] > value_max or m.values[i] < 0:
+                if m.values[i] > value_max or m.values[i] < 1:
                     if random.random() < at_invalid_rate:
                         m.values[i] = restrict_val(m.values[i], (m.values[i] > value_max))
                     else:
-                        m.values[i] = random.randint(0, value_max)
+                        m.values[i] = random.randint(r, value_max)
             else:
-                m.weights[i] = random.randint(0, weight_max)
-                m.values[i] = random.randint(0, value_max)
+                m.weights[i] = random.randint(1, weight_max)
+                m.values[i] = random.randint(1, value_max)
 
-        assert(m.weights[i] <= weight_max and m.weights[i] >= 0)
-        assert(m.values[i] <= value_max and m.values[i] >= 0)
+        assert(m.weights[i] <= weight_max and m.weights[i] >= 1)
+        assert(m.values[i] <= value_max and m.values[i] >= 1)
     
     # print(">> mutate: evaluate mutated individual")
     if update:
