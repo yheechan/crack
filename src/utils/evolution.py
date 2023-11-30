@@ -189,7 +189,7 @@ def mutate(
                     if random.random() < at_invalid_rate:
                         m.values[i] = restrict_val(m.values[i], (m.values[i] > value_max))
                     else:
-                        m.values[i] = random.randint(r, value_max)
+                        m.values[i] = random.randint(1, value_max)
             else:
                 m.weights[i] = random.randint(1, weight_max)
                 m.values[i] = random.randint(1, value_max)
