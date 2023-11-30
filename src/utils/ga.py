@@ -27,7 +27,8 @@ def evolve(
         n_max=100,
         b_max=100000,
         weight_max=100000,
-        value_max=10000
+        value_max=10000,
+        method = 1
     ):
     next_gen = []
 
@@ -45,7 +46,8 @@ def evolve(
             p1, p2,
             cross_rate=cross_rate,
             at_invalid_rate=cross_at_invalid_rate,
-            n_max=n_max
+            n_max=n_max,
+            method = method
         )
 
         print(">> mutation")
@@ -87,7 +89,8 @@ def ga(
     n_max=100,
     b_max=100000,
     weight_max=100000,
-    value_max=10000
+    value_max=10000,
+    method = 1
 ):
     assert(tc_size > selection)
 
@@ -106,7 +109,8 @@ def ga(
         "n_max": n_max,
         "b_max": b_max,
         "weight_max": weight_max,
-        "value_max": value_max
+        "value_max": value_max,
+        "method" : method
     })
 
     tc_list = []
@@ -143,7 +147,8 @@ def ga(
             n_max=n_max,
             b_max=b_max,
             weight_max=weight_max,
-            value_max=value_max
+            value_max=value_max,
+            method = method
         )
         test_suite.evaluate()
         rs.record_individuals(experiment_name, test_suite, gen_count+1, gen_limit)
