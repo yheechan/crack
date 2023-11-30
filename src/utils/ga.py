@@ -47,6 +47,7 @@ def evolve(
             cross_rate=cross_rate,
             at_invalid_rate=cross_at_invalid_rate,
             n_max=n_max,
+            b_max=b_max,
             method = method
         )
 

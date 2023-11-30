@@ -3,8 +3,6 @@ import numpy as np
 import math
 from . import solution as sl
 
-B_MAX = 10000
-
 def unzip(d):
     weights = [i for i, j in d]
     values = [j for i, j in d]
@@ -40,7 +38,7 @@ def discrete_normal_distribution(N):
 
     return sampled_value
 
-def budget_proportion(o1, o2, cp1, cp2):
+def budget_proportion(o1, o2, cp1, cp2, b_max):
     N1 = o1.N
     N2 = o2.N
     B1 = o1.budget
@@ -49,8 +47,8 @@ def budget_proportion(o1, o2, cp1, cp2):
     b1 = math.floor(float(B1)*(cp1 + 1)/N1 + float(B2)*(N2 - (cp2 + 1))/N2)
     b2 = math.floor(float(B1)*(N1 - (cp1 + 1))/N1 + float(B2)*(cp2 + 1)/N2)
     
-    b1 = min(B_MAX, b1)
-    b2 = min(B_MAX, b2)
+    b1 = min(b_max, b1)
+    b2 = min(b_max, b2)
     
     return b1, b2
 
@@ -63,6 +61,7 @@ def crossover(
         cross_rate=0.7,
         at_invalid_rate=0.0,
         n_max=100,
+        b_max=100000,
         method = 1
 ):
     # TODO: Heechan
@@ -126,7 +125,7 @@ def crossover(
         # print(">> crossover: update budget as porportion")
         if method == 2 or method == 4:
             # update budget for the offspring in proportion to its N
-            o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2)
+            o1.budget, o2.budget = budget_proportion(o1, o2, cp1, cp2, b_max)
 
         # print(">> crossover: update length")
         # update N for the offspring to new cross over weight and profit

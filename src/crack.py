@@ -1,17 +1,10 @@
 from utils import ga
 import sys
 
-'''
 N_MAX = 100
 B_MAX = 100000
 WEIGHT_MAX = 100000
 VALUE_MAX = 10000
-'''
-
-N_MAX = 10
-B_MAX = 10000
-WEIGHT_MAX = 10000
-VALUE_MAX = 1000
 
 # **************************
 # ********** MAIN **********
@@ -20,6 +13,7 @@ VALUE_MAX = 1000
 if __name__ == "__main__":
     best_sol = ga.ga(
         experiment_name='hyunsun_01',
+        end_criterion=0.95,
         tc_size=10, # greater than 2
         gen_limit=sys.maxsize,
         selection=2, # less than tc_size
