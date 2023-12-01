@@ -11,11 +11,13 @@ VALUE_MAX = 5000
 # **************************
 
 if __name__ == "__main__":
+    arg1 = sys.argv[1]
     best_sol = ga.ga(
-        experiment_name='norm_cp_02',
+        experiment_name=arg1,
         end_criterion=1.0,
-        tc_size=5, # greater than 2
-        gen_limit=sys.maxsize,
+        ts_size=5,
+        tc_size=3, # greater than 2
+        gen_limit=100,
         selection=2, # less than tc_size
         cross_rate=1.0,
         cross_at_invalid_rate=0.0,
@@ -28,4 +30,3 @@ if __name__ == "__main__":
         value_max=VALUE_MAX,
         method = 3 # 1(random), 2(budget proportion), 3(norm CP select), 4(apply both)
     )
-

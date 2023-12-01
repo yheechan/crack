@@ -79,6 +79,7 @@ def evolve(
 def ga(
     experiment_name='test_no_name',
     end_criterion=0.9,
+    ts_size=5,
     tc_size=5,
     gen_limit=100,
     selection=3,
@@ -114,45 +115,52 @@ def ga(
         "method" : method
     })
 
-    tc_list = []
-    # make test_cases
-    for j in range(tc_size):
-        tc = sl.random_solution(
-            n_max=n_max, b_max=b_max,
-            weight_max=weight_max, value_max=value_max
-        )
-        tc.evaluate()
-        tc_list.append(tc)
+    ts_list = []
+    # make test_suites
+    for i in range(ts_size):
+        tc_list = []
+        # make test_cases
+        for j in range(tc_size):
+            tc = sl.random_solution(
+                n_max=n_max, b_max=b_max,
+                weight_max=weight_max, value_max=value_max
+            )
+            tc.evaluate()
+            tc_list.append(tc)
 
-        print(">> finish making individual {}/{}".format(j+1, tc_size))
+            print(">> finish making individual {}/{}".format(j+1, tc_size))
 
-    test_suite = ts.Test_Suite(tc_list)
-    test_suite.evaluate()
+        test_suite = ts.Test_Suite(tc_list)
+        test_suite.evaluate()
 
-    print(">> finish making test suite")
+        ts_list.append(test_suite)
 
+        print(">> finish making test suite")
+
+    best_solution = ts_list[random.randrange(ts_size)]
     gen_count = 0
 
     ts_per_gen = {}
-    while gen_count < gen_limit and test_suite.fitness < end_criterion:
+    while gen_count < gen_limit and best_solution.fitness < end_criterion:
         print(">> running generation {}/{}".format(gen_count+1, gen_limit))
 
-        evolve(
-            test_suite,
-            selection=selection,
-            cross_rate=cross_rate,
-            cross_at_invalid_rate=cross_at_invalid_rate,
-            mutate_rate=mutate_rate,
-            mutate_type_rate=mutate_type_rate,
-            mutate_at_invalid_rate=mutate_at_invalid_rate,
-            n_max=n_max,
-            b_max=b_max,
-            weight_max=weight_max,
-            value_max=value_max,
-            method = method
-        )
-        test_suite.evaluate()
-        rs.record_individuals(experiment_name, test_suite, gen_count+1, gen_limit)
+        for single_ts in ts_list:
+            evolve(
+                single_ts,
+                selection=selection,
+                cross_rate=cross_rate,
+                cross_at_invalid_rate=cross_at_invalid_rate,
+                mutate_rate=mutate_rate,
+                mutate_type_rate=mutate_type_rate,
+                mutate_at_invalid_rate=mutate_at_invalid_rate,
+                n_max=n_max,
+                b_max=b_max,
+                weight_max=weight_max,
+                value_max=value_max,
+                method = method
+            )
+            test_suite.evaluate()
+            rs.record_individuals(experiment_name, test_suite, gen_count+1, gen_limit)
 
         gen_count += 1
     
