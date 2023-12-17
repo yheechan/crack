@@ -1,59 +1,19 @@
 # **CRACK**: automati**C** sea**R**ch for corner test c**A**ses on 0-1 knapsa**CK** problem
 
-# Goal
-find a set of input cases (test-suite) that kills all the faulty programs by applying Genetic Algorithm to each input cases in a test-suite.
+The CRACK project stands at the forefront of algorithmic testing innovation, aspiring to validate the effectiveness of employing Genetic Algorithms (GAs) in the search for corner test cases within the complex domain of the 0-1 Knapsack Problem. The primary objective of CRACK is to experimentally assess the viability of utilizing Genetic Algorithms in the realm of algorithmic problem solving. Through empirical programs and rigorous experimentation, the project seeks to demonstrate the utility of GAs in uncovering elusive corner cases that may challenge traditional algorithmic solutions. By systematically refining and evolving potential test scenarios, CRACK aims to shed light on the efficiency of this automated approach, paving the way for more resilient and adaptive algorithms in the face of intricate computational challenges.
 
-# CURRENTLY
-* generates random solution (input) to 0-1 KNAPSACK problem; at given limits in [baekjoon problem](https://www.acmicpc.net/problem/12865)
-* makes a test-suite
-* evolves the test-suite to kill faulty programs at its best by applying GA to each input cases.
-
-# Executing Command
+# How to Run Genetic Algorithm
 ```
-$ cd src
+$ cd src/
 $ python3 crack.py
 ```
+* To change parameters for genetic algorithm experiment, alter the settings within ```./src/crack.py``` python script.
 
-# Current BUG
-* Please fix and handle following bugs (hyunsun)
-    * ```discrete_normal_distribution``` function at ```evolution.py``` used within ```crossover``` to select a crossover_point in a normal distribution is quite buggy when possibly the number of elements of a solution is 0. It will basically send value of -1 to the function. For mor detail it produces following bug.
-    ```
-    /home/yangheechan/23-2/cs454/crack/src/utils/evolution.py:33: RuntimeWarning: invalid value encountered in true_divide
-    probabilities = np.exp(-(values - N/2)**2 / (2 * (N/4)**2))
-    Traceback (most recent call last):
-    File "crack.py", line 20, in <module>
-        best_sol = ga.ga(
-    File "/home/yangheechan/23-2/cs454/crack/src/utils/ga.py", line 135, in ga
-        evolve(
-    File "/home/yangheechan/23-2/cs454/crack/src/utils/ga.py", line 44, in evolve
-        o1, o2 = evo.crossover(
-    File "/home/yangheechan/23-2/cs454/crack/src/utils/evolution.py", line 77, in crossover
-        cp2 = discrete_normal_distribution(p2.N-1)
-    File "/home/yangheechan/23-2/cs454/crack/src/utils/evolution.py", line 37, in discrete_normal_distribution
-        sampled_value = np.random.choice(values, p=probabilities)
-    File "mtrand.pyx", line 929, in numpy.random.mtrand.RandomState.choice
-    ValueError: probabilities contain NaN
-    ```
-    * ```budget_proportion``` can sometimes assigne a budget value greater then given budget limit. Please add assertion for validation.
+# Output Results
+* Results can be seen in ```./src/result/``` directory.
+    * ```individuals_<fomat>/``` directory contains the details of individuals per generation
+    * ```test_suite_evolution.<format>``` file contains the information of generations
+    * ```parameter.json``` file contains the parameter settings for the experiment
 
-# TODO
-* Talk about what visualization (graphs, table, etc.) will be needed for final presentation and report.
-* Find needed data (aka, values, informations) to make these visualization
-
-# Tasks
-* hyunsun:
-    * fix bugs
-    * update code for better user interface on running for each ```types```.
-    * share this to team so each members can start running experiments
-* sumin:
-    * implement script for making visualizations
-    * receive all the experiments done by each member
-    * finalize visualizations
-    * possible helpful sites
-        * reading json: https://www.geeksforgeeks.org/read-json-file-using-python/
-        * reading multiple json in one file: https://pynative.com/python-parse-multiple-json-objects-from-file/
-* jaemin & heechan:
-    * continue elaboration and thinking with hyunsun and sumin for making our final presentation and report a better quality
-
-# EXPECTATIONS
-EXPECT MULTIPLE SHORT ONLINE MEETINGS FOR CLARIFICATIONS BETWEEN EACH OTHER.
+# More Information...
+More informations can be found in ```./doc/``` directory, where it contains the slides used during presentation and a final report in PDF format.
