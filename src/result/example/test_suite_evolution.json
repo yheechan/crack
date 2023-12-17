@@ -1,0 +1,3 @@
+{"ts_1_3": {"generation": 1, "tc_num": 5, "data_num": 21, "state": [true, true, true, true, true, false, true, true, true, true, false, true, true, true, true, true, true, true, true, true, false], "fitness": 0.8571428571428571}}
+{"ts_2_3": {"generation": 2, "tc_num": 5, "data_num": 21, "state": [true, true, true, true, true, false, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true], "fitness": 0.9047619047619048}}
+{"ts_3_3": {"generation": 3, "tc_num": 5, "data_num": 21, "state": [true, true, true, true, true, false, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true], "fitness": 0.9047619047619048}}

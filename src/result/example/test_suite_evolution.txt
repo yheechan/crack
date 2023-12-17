@@ -1,0 +1,21 @@
+====== Test-Suite Info ======
+tc_num: 5
+data_num: 21
+state (21): [True, True, True, True, True, False, True, True, True, True, False, True, True, True, True, True, True, True, True, True, False]
+fitness: 0.8571428571428571
+=============================
+
+====== Test-Suite Info ======
+tc_num: 5
+data_num: 21
+state (21): [True, True, True, True, True, False, True, True, True, True, False, True, True, True, True, True, True, True, True, True, True]
+fitness: 0.9047619047619048
+=============================
+
+====== Test-Suite Info ======
+tc_num: 5
+data_num: 21
+state (21): [True, True, True, True, True, False, True, True, True, True, False, True, True, True, True, True, True, True, True, True, True]
+fitness: 0.9047619047619048
+=============================
+

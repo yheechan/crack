@@ -12,10 +12,10 @@ VALUE_MAX = 5000
 
 if __name__ == "__main__":
     best_sol = ga.ga(
-        experiment_name='norm_cp_02',
+        experiment_name='example',
         end_criterion=1.0,
         tc_size=5, # greater than 2
-        gen_limit=sys.maxsize,
+        gen_limit=3,
         selection=2, # less than tc_size
         cross_rate=1.0,
         cross_at_invalid_rate=0.0,

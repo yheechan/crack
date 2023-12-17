@@ -1,0 +1,17 @@
+{
+    "experiment_name": "example",
+    "end_criterion": 1.0,
+    "tc_size": 5,
+    "gen_limit": 3,
+    "selection": 2,
+    "cross_rate": 1.0,
+    "cross_at_invalid_rate": 0.0,
+    "mutate_rate": 1.0,
+    "mutate_type_rate": 0.2,
+    "mutate_at_invalid_rate": 0.5,
+    "n_max": 50,
+    "b_max": 50000,
+    "weight_max": 50000,
+    "value_max": 5000,
+    "method": 3
+}
